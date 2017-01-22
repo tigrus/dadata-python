@@ -3,11 +3,11 @@
 """
 
 import unittest
+from dadata import DaDataClient
 
 
 class DenyTest(unittest.TestCase):
-    def testDeny(self):
-        print("Deny test should be here..")
+    def test_deny(self):
         self.assertTrue(True)
 
 

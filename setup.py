@@ -16,15 +16,18 @@ setup(
     description = ("DaData Python Client"),
     license = "BSD",
     keywords = "dadata api-client",
-    url = "http://packages.python.org/an_example_pypi_project",
+    # url = "http://packages.python.org/an_example_pypi_project",
     packages=['dadata', 'tests'],
     install_requires=[
         'requests',
         # 'nosetests',
     ],
+    setup_requires=[
+        'pytest-runner',
+    ],
     long_description=read('README'),
-    test_suite='nose.collector',
-    tests_require=['nose'],
+    # test_suite='pytest',
+    tests_require=['pytest', ],
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Topic :: Utilities",
