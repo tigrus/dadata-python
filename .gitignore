@@ -1,0 +1,6 @@
+*.swp
+*.swo
+*.egg-info
+.eggs
+build/*
+
