@@ -14,6 +14,13 @@ ADDRESS_LIMIT = 3
 FIO_LIMIT = 1
 
 """
+Exceptions
+"""
+class LimitExceed(Exception):
+    pass
+
+
+"""
 Helper Mixins
 """
 class ManyOneMixin(object):
@@ -21,6 +28,7 @@ class ManyOneMixin(object):
         return self.data[0] if self.data else None
 
     def _set_one(self, value):
+        self.data = []
         self.data.append(value)
 
     one = property(_get_one, _set_one)
@@ -29,6 +37,9 @@ class ManyOneMixin(object):
         return self.data
 
     def _set_many(self, value):
+        self.data = []
+        if len(value) > self.limit:
+            raise LimitExceed('Ограничение превышено. Введено %s значений из %s' % (len(value), self.limit))
         self.data.extend(value)
 
     many = property(_get_many, _set_many)
@@ -45,23 +56,32 @@ class ApiURL(ManyOneMixin):
         self.data = []
 
 
+class Clean(ApiURL):
+    def __init__(self, *args, **kwargs):
+        super(Clean, self).__init__(*args, **kwargs)
+        kwargs['url'] = kwargs['url'] + '/address'
+        self.address = Address(**kwargs)
+
 
 class Address(ApiURL):
-    pass
+    limit = ADDRESS_LIMIT
 
 
 class DaDataClient(object):
-    defaults = {
-        'url': 'https://dadata.ru/api/v2/clean/',
-    }
+    url = 'https://dadata.ru/api/v2'
+    key = ''
+    secret = ''
 
     def __init__(self, *args, **kwargs):
-        for key, value in self.defaults.items():
-            setattr(self, key, value)
-
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-        self.address = Address(
-            url = self.url + 'address'
+        self.clean = Clean(
+            url = self.url + '/clean',
+            key = self.key,
+            secret = self.secret,
         )
+
+    @property
+    def address(self):
+        return self.clean.address
