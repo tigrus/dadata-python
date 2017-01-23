@@ -1,3 +1,7 @@
+# coding: utf-8
+"""
+Проверяем конфигурируемость клиента
+"""
 import unittest
 from dadata import DaDataClient
 

@@ -1,3 +1,4 @@
+# coding: utf-8
 """
 Тестового варианта доступа не существует, поэтому проверим отказ в доступе.
 """
@@ -9,5 +10,3 @@ from dadata import DaDataClient
 class DenyTest(unittest.TestCase):
     def test_deny(self):
         self.assertTrue(True)
-
-
