@@ -3,13 +3,11 @@
 Проверяем конфигурируемость клиента
 """
 import unittest
+from .common import CommonTestCase
 from dadata import DaDataClient
 
 
-class DefaultsTest(unittest.TestCase):
-    def setUp(self):
-        self.client = DaDataClient()
-
+class DefaultsTest(CommonTestCase):
     def test_url(self):
         self.assertEqual(self.client.url, self.client.url)
 

@@ -1,17 +1,12 @@
 # coding: utf-8
-import unittest
-import random
-from dadata import DaDataClient
+from .common import CommonTestCase
 from dadata import LimitExceed, Errors
 
 
-class UrlBuildTest(unittest.TestCase):
+class UrlBuildTest(CommonTestCase):
     """
     Проверяем создание урла для запроса
     """
-    def setUp(self):
-        self.client = DaDataClient()
-
     def test_address_url(self):
         url = self.client.address.url
         correct_url = self.client.url + '/clean/address'
@@ -22,24 +17,18 @@ class UrlBuildTest(unittest.TestCase):
         self.assertEqual(result, Errors.CLIENT_NO_KEY)
 
     def test_request_no_secret(self):
-        client = DaDataClient(key="anykey")
-        result = client.address.request()
+        result = self.client_with_key.address.request()
         self.assertEqual(result, Errors.CLIENT_NO_SECRET)
 
     def test_request_no_data(self):
-        client = DaDataClient(key="anykey", secret="anysec")
-        result = client.address.request()
+        result = self.client_with_key_secret.address.request()
         self.assertEqual(result, Errors.CLIENT_NO_DATA)
 
 
-
-class DataSetTest(unittest.TestCase):
+class DataSetTest(CommonTestCase):
     """
     Проверяем параметры и их лимиты
     """
-    def setUp(self):
-        self.client = DaDataClient()
-
     def test_address_one_empty(self):
         self.assertEqual(self.client.address.one, None)
 
@@ -49,7 +38,7 @@ class DataSetTest(unittest.TestCase):
 
     def test_address_many_set(self):
         self.client.address.many = ["Berkley Street 10", "Another Nice Street"]
-        self.assertEqual(self.client.address.many, self.client.address.data)
+        self.assertEqual(self.client.address.many, self.client.data)
         self.assertEqual(self.client.address.many, ["Berkley Street 10", "Another Nice Street"])
         self.assertEqual(self.client.address.one, "Berkley Street 10")
 

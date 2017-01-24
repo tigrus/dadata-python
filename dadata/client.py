@@ -33,22 +33,22 @@ Helper Mixins
 """
 class ManyOneMixin(object):
     def _get_one(self):
-        return self.data[0] if self.data else None
+        return self.client.data[0] if self.client.data else None
 
     def _set_one(self, value):
-        self.data = []
-        self.data.append(value)
+        self.client.data = []
+        self.client.data.append(value)
 
     one = property(_get_one, _set_one)
 
     def _get_many(self):
-        return self.data
+        return self.client.data
 
     def _set_many(self, value):
-        self.data = []
+        self.client.data = []
         if len(value) > self.limit:
             raise LimitExceed('Ограничение превышено. Введено %s значений из %s' % (len(value), self.limit))
-        self.data.extend(value)
+        self.client.data.extend(value)
 
     many = property(_get_many, _set_many)
 
@@ -59,24 +59,19 @@ class ManyOneMixin(object):
 class ApiURL(ManyOneMixin):
     limit = 1
     url = ''
-    data = []
 
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
     def request(self):
-        if not self.key:
-            return Errors.CLIENT_NO_KEY
-        if not self.secret:
-            return Errors.CLIENT_NO_SECRET
-        if not self.data:
-            return Errors.CLIENT_NO_DATA
+        return self.client.request()
 
 
 class Clean(ApiURL):
     def __init__(self, *args, **kwargs):
         super(Clean, self).__init__(*args, **kwargs)
+
         kwargs['url'] = kwargs['url'] + '/address'
         self.address = Address(**kwargs)
 
@@ -89,6 +84,7 @@ class DaDataClient(object):
     url = 'https://dadata.ru/api/v2'
     key = ''
     secret = ''
+    data = []
 
     def __init__(self, *args, **kwargs):
         for key, value in kwargs.items():
@@ -96,11 +92,18 @@ class DaDataClient(object):
 
         self.clean = Clean(
             url = self.url + '/clean',
-            key = self.key,
-            secret = self.secret,
+            client = self,
         )
 
     @property
     def address(self):
         return self.clean.address
+
+    def request(self):
+        if not self.key:
+            return Errors.CLIENT_NO_KEY
+        if not self.secret:
+            return Errors.CLIENT_NO_SECRET
+        if not self.data:
+            return Errors.CLIENT_NO_DATA
 
