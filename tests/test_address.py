@@ -1,10 +1,13 @@
 """
 Здесь будем проверять запросы к ресурсу типа адрес
 """
-from .common import CommonTestCase
-from dadata import DaDataClient
+import json
 import requests_mock
 
+from .common import CommonTestCase
+from dadata import DaDataClient
+
+ADDRESS_REQUEST = "мск сухонска 11/-89"
 
 ADDRESS_RESPONSE = """[
     {
@@ -87,4 +90,21 @@ ADDRESS_RESPONSE = """[
 
 class AddressRequestTest(CommonTestCase):
     def setUp(self):
-        super(AddressRequestTest, self).setUp()
+        self.client = DaDataClient(
+            url="mock://api/v2",
+            key="key",
+            secret="secret",
+        )
+        adapter = requests_mock.Adapter()
+        adapter.register_uri('POST',
+                             'mock://api/v2/clean/address',
+                             request_headers={'Authorization': 'Token key', 'X-Secret':'secret'},
+                             text=ADDRESS_RESPONSE)
+        self.client.session.mount('mock', adapter)
+
+    def test_address_request(self):
+        self.client.address.one = ADDRESS_REQUEST
+        code = self.client.address.request()
+        self.assertEqual(code, 200)
+        result = self.client.result
+        self.assertEqual(result.region_kladr_id, "7700000000000")

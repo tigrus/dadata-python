@@ -1,5 +1,7 @@
 import requests
+import json
 from copy import deepcopy
+
 
 """
 Ограничения:
@@ -14,8 +16,10 @@ ADDRESS_LIMIT = 3
 FIO_LIMIT = 1
 
 """
-Errors
+Constants & Errors
 """
+SUCCESS = 200
+
 class Errors:
     CLIENT_NO_KEY = 600
     CLIENT_NO_SECRET = 601
@@ -56,6 +60,11 @@ class ManyOneMixin(object):
 """
 Обертка над Dadata API
 """
+class Result(object):
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+
+
 class ApiURL(ManyOneMixin):
     limit = 1
     url = ''
@@ -65,13 +74,16 @@ class ApiURL(ManyOneMixin):
             setattr(self, key, value)
 
     def request(self):
-        return self.client.request()
+        return self.client.request(self)
+
+    def process_result(self, client):
+        result = Result(**client._result[0])
+        return result
 
 
 class Clean(ApiURL):
     def __init__(self, *args, **kwargs):
         super(Clean, self).__init__(*args, **kwargs)
-
         kwargs['url'] = kwargs['url'] + '/address'
         self.address = Address(**kwargs)
 
@@ -85,13 +97,14 @@ class DaDataClient(object):
     key = ''
     secret = ''
     data = []
+    result = None
 
     def __init__(self, *args, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
         self.clean = Clean(
-            url = self.url + '/clean',
+            url = self.url + '/clean',  # Rethink
             client = self,
         )
 
@@ -101,11 +114,27 @@ class DaDataClient(object):
     def address(self):
         return self.clean.address
 
-    def request(self):
+    def request(self, api_method=None):
+        # TODO: Rethink..
         if not self.key:
             return Errors.CLIENT_NO_KEY
         if not self.secret:
             return Errors.CLIENT_NO_SECRET
         if not self.data:
             return Errors.CLIENT_NO_DATA
+
+        response = self.session.post(api_method.url,
+                                     data=json.dumps(self.data),
+                                     headers={
+                                         'Authorization': 'Token %s' % self.key,
+                                         'X-Secret': '%s' % self.secret,
+                                     })
+
+        if not response.status_code == SUCCESS:
+            return response.status_code
+
+        self._result = json.loads(response.content.decode('utf-8'))
+        self.result = api_method.process_result(self)
+        self.response = response
+        return SUCCESS
 
