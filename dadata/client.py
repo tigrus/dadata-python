@@ -95,6 +95,8 @@ class DaDataClient(object):
             client = self,
         )
 
+        self.session = requests.Session()
+
     @property
     def address(self):
         return self.clean.address

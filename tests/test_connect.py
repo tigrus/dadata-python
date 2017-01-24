@@ -2,11 +2,12 @@
 """
 Тестового варианта доступа не существует, поэтому проверим отказ в доступе.
 """
-
-import unittest
-from dadata import DaDataClient
+from .common import CommonTestCase
 
 
-class DenyTest(unittest.TestCase):
+class DenyTest(CommonTestCase):
     def test_deny(self):
         self.assertTrue(True)
+
+    def test_that_client_has_session(self):
+        self.assertTrue(self.client.session)
