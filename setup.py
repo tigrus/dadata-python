@@ -25,7 +25,7 @@ setup(
     setup_requires=[
         'pytest-runner',
     ],
-    long_description=read('README'),
+    long_description=read('README.md'),
     # test_suite='pytest',
     tests_require=['pytest', ],
     classifiers=[
