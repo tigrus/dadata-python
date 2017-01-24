@@ -14,6 +14,14 @@ ADDRESS_LIMIT = 3
 FIO_LIMIT = 1
 
 """
+Errors
+"""
+class Errors:
+    CLIENT_NO_KEY = 600
+    CLIENT_NO_SECRET = 601
+    CLIENT_NO_DATA = 602
+
+"""
 Exceptions
 """
 class LimitExceed(Exception):
@@ -50,10 +58,20 @@ class ManyOneMixin(object):
 """
 class ApiURL(ManyOneMixin):
     limit = 1
+    url = ''
+    data = []
 
-    def __init__(self, url=None, **kwargs):
-        self.url = url
-        self.data = []
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+    def request(self):
+        if not self.key:
+            return Errors.CLIENT_NO_KEY
+        if not self.secret:
+            return Errors.CLIENT_NO_SECRET
+        if not self.data:
+            return Errors.CLIENT_NO_DATA
 
 
 class Clean(ApiURL):
@@ -85,3 +103,4 @@ class DaDataClient(object):
     @property
     def address(self):
         return self.clean.address
+

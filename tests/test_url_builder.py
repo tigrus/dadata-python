@@ -2,7 +2,7 @@
 import unittest
 import random
 from dadata import DaDataClient
-from dadata import LimitExceed
+from dadata import LimitExceed, Errors
 
 
 class UrlBuildTest(unittest.TestCase):
@@ -16,6 +16,21 @@ class UrlBuildTest(unittest.TestCase):
         url = self.client.address.url
         correct_url = self.client.url + '/clean/address'
         self.assertEqual(url, correct_url)
+
+    def test_request_no_key(self):
+        result = self.client.address.request()
+        self.assertEqual(result, Errors.CLIENT_NO_KEY)
+
+    def test_request_no_secret(self):
+        client = DaDataClient(key="anykey")
+        result = client.address.request()
+        self.assertEqual(result, Errors.CLIENT_NO_SECRET)
+
+    def test_request_no_data(self):
+        client = DaDataClient(key="anykey", secret="anysec")
+        result = client.address.request()
+        self.assertEqual(result, Errors.CLIENT_NO_DATA)
+
 
 
 class DataSetTest(unittest.TestCase):
@@ -43,7 +58,4 @@ class DataSetTest(unittest.TestCase):
             self.client.address.many = ["Berkley Street 10", "Another Nice Street", "10", "20"]
         except LimitExceed as e:
             self.assertTrue(e)
-            print("Test")
         self.assertFalse(self.client.address.many)
-
-
