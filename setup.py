@@ -13,7 +13,7 @@ setup(
     license = "BSD",
     keywords = "dadata api-client",
     # url = "http://packages.python.org/an_example_pypi_project",
-    packages=['dadata', 'tests'],
+    packages=['dadata'],
     install_requires=[
         'requests',
         # 'nosetests',
