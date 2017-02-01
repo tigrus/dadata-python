@@ -9,7 +9,9 @@ python:
   #- "3.7-dev" # 3.7 development branch
   #- "nightly" # currently points to 3.7-dev
 # command to install dependencies
-install: "python setup.py build"
+install: 
+  - python setup.py build
+  - pip install pytest
 # command to run tests
 script: pytest
 
