@@ -33,3 +33,20 @@ $ pip install -e git+https://github.com/tigrus/dadata-python#egg=dadata
 >>> client.response.content
 ```
 
+## Usage With Django
+
+In `settings.py`:
+```
+DADATA_KEY = ""
+DADATA_SECRET = ""
+```
+
+In project:
+```
+>>> from dadata.plugins.django import DjangoDaDataClient
+>>> client = DjangoDaDataClient()
+
+>>> # Now using as regular client..
+>>> client.address = "мск сухонска 11/-89"
+...
+```
