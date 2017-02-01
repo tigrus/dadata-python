@@ -1,4 +1,5 @@
-# Unofficial Python dadata.ru Client |build-status|
+Unofficial Python dadata.ru Client |build-status|
+===============================================
 
 ## Usage
 
