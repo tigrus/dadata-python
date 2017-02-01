@@ -1,4 +1,4 @@
-Unofficial Python dadata.ru Client |build-status|
+Unofficial Python dadata.ru Client [![Build Status](https://travis-ci.org/tigrus/dadata-python.svg?branch=master)](https://travis-ci.org/tigrus/dadata-python)
 ===============================================
 
 ## Usage
@@ -27,6 +27,3 @@ Unofficial Python dadata.ru Client |build-status|
 >>> client.response.content
 ```
 
-.. |build-status| image:: https://travis-ci.org/tigrus/dadata-python.svg?branch=master
-   :target: https://travis-ci.org/samgiles/slumber
-   :alt: Build status
