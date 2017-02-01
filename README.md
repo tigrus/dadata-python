@@ -26,3 +26,7 @@ Unofficial Python dadata.ru Client |build-status|
 >>> #However we can reprocess data by our own desire - result from API saved in 
 >>> client.response.content
 ```
+
+.. |build-status| image:: https://travis-ci.org/tigrus/dadata-python.svg?branch=master
+   :target: https://travis-ci.org/samgiles/slumber
+   :alt: Build status
