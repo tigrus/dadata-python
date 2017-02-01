@@ -10,8 +10,8 @@ python:
   #- "nightly" # currently points to 3.7-dev
 # command to install dependencies
 install: 
-  - python setup.py build
+  - python3 setup.py build
 # command to run tests
 script:
-  - python setup.py test
+  - python3 setup.py test
 
