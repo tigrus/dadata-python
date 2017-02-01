@@ -1,6 +1,12 @@
 Unofficial Python dadata.ru Client [![Build Status](https://travis-ci.org/tigrus/dadata-python.svg?branch=master)](https://travis-ci.org/tigrus/dadata-python)
 ===============================================
 
+## Install
+
+```
+$ pip install -e git+https://github.com/tigrus/dadata-python#egg=dadata
+```
+
 ## Usage
 
 ```
