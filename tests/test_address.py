@@ -105,7 +105,7 @@ class AddressRequestTest(CommonTestCase):
         self.client.session.mount('mock', adapter)
 
     def test_address_request(self):
-        self.client.address.one = ADDRESS_REQUEST
+        self.client.address = ADDRESS_REQUEST
         code = self.client.address.request()
         self.assertEqual(code, 200)
         result = self.client.result

@@ -33,11 +33,11 @@ class DataSetTest(CommonTestCase):
         self.assertEqual(self.client.address.one, None)
 
     def test_address_one_set(self):
-        self.client.address.one = "Berkley Street 10"
+        self.client.address = "Berkley Street 10"
         self.assertEqual(self.client.address.one, "Berkley Street 10")
 
     def test_address_many_set(self):
-        self.client.address.many = ["Berkley Street 10", "Another Nice Street"]
+        self.client.address = ["Berkley Street 10", "Another Nice Street"]
         self.assertEqual(self.client.address.many, self.client.data)
         self.assertEqual(self.client.address.many, ["Berkley Street 10", "Another Nice Street"])
         self.assertEqual(self.client.address.one, "Berkley Street 10")

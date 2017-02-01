@@ -1,5 +1,4 @@
 # coding: utf-8
-
 import requests
 import json
 from copy import deepcopy
@@ -16,6 +15,7 @@ EMAIL_LIMIT = 3
 PHONE_LIMIT = 3
 ADDRESS_LIMIT = 3
 FIO_LIMIT = 1
+
 
 """
 Constants & Errors
@@ -74,6 +74,7 @@ class ApiURL(ManyOneMixin):
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
+        self.url += self.url_postfix
 
     def request(self):
         return self.client.request(self)
@@ -82,15 +83,24 @@ class ApiURL(ManyOneMixin):
         result = Result(**client._result[0])
         return result
 
+    def update(self, value):
+        if isinstance(value, list):
+            self.many = value
+        else:
+            self.one = value
+
 
 class Clean(ApiURL):
+    url_postfix = '/clean'
+
     def __init__(self, *args, **kwargs):
         super(Clean, self).__init__(*args, **kwargs)
-        kwargs['url'] = kwargs['url'] + '/address'
+        kwargs['url'] = self.url
         self.address = Address(**kwargs)
 
 
 class Address(ApiURL):
+    url_postfix = '/address'
     limit = ADDRESS_LIMIT
 
 
@@ -106,15 +116,21 @@ class DaDataClient(object):
             setattr(self, key, value)
 
         self.clean = Clean(
-            url = self.url + '/clean',  # Rethink
+            url = self.url,
             client = self,
         )
 
         self.session = requests.Session()
 
+
     @property
     def address(self):
         return self.clean.address
+
+    @address.setter
+    def address(self, value):
+        self.clean.address.update(value)
+
 
     def request(self, api_method=None):
         # TODO: Rethink..

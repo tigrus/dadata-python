@@ -17,10 +17,10 @@ $ pip install -e git+https://github.com/tigrus/dadata-python#egg=dadata
 )
 
 >>> # You can assign one address
->>> client.address.one = "мск сухонска 11/-89"
+>>> client.address = "мск сухонска 11/-89"
 
->>> #You can assign multiple addresses
->>> client.address.many = ["мск сухонска 11/-89", "спб невский 18"]
+>>> # You can assign multiple addresses
+>>> client.address = ["мск сухонска 11/-89", "спб невский 18"]
 
 >>> #Now let's perform request..
 >>> client.address.request()
