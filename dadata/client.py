@@ -15,6 +15,7 @@ EMAIL_LIMIT = 3
 PHONE_LIMIT = 3
 ADDRESS_LIMIT = 3
 FIO_LIMIT = 1
+PASSPORT_LIMIT = 1
 
 """
 Constants & Errors
