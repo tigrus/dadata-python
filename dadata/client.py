@@ -249,6 +249,7 @@ class DaDataClient(object):
 
         headers={
             'Authorization': 'Token %s' % self.key,
+            'Content-Type': 'application/json',
         }
 
         if api_method.private:
