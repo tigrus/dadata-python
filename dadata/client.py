@@ -18,6 +18,7 @@ FIO_LIMIT = 1
 PASSPORT_LIMIT = 1
 DATE_LIMIT = 1
 AUTO_LIMIT = 1
+SUGGESTIONS_LIMIT = 1
 
 
 """
@@ -30,6 +31,8 @@ CLEAN_NAMES = ['address', 'phone', 'passport', 'fio', 'email', 'auto', 'date']
 Constants & Errors
 """
 SUCCESS = 200
+
+LIMIT_ERROR = 'Ограничение превышено. Введено %s значений из %s'
 
 class Errors:
     CLIENT_NO_KEY = 600
@@ -62,10 +65,20 @@ class ManyOneMixin(object):
     def _set_many(self, value):
         self.client.data = []
         if len(value) > self.limit:
-            raise LimitExceed('Ограничение превышено. Введено %s значений из %s' % (len(value), self.limit))
+            raise LimitExceed(LIMIT_ERROR % (len(value), self.limit))
         self.client.data.extend(value)
 
     many = property(_get_many, _set_many)
+
+
+class QueryMixin(object):
+    def _get_query(self):
+        return self.client.data
+
+    def _set_query(self, value):
+        self.client.data = {'query': value}
+
+    query = property(_get_query, _set_query)
 
 
 """
@@ -76,7 +89,7 @@ class Result(object):
         self.__dict__.update(kwargs)
 
 
-class ApiURL(ManyOneMixin):
+class ApiURL(ManyOneMixin, QueryMixin):
     limit = 1
     url = ''
     private = True
@@ -94,10 +107,13 @@ class ApiURL(ManyOneMixin):
         return result
 
     def update(self, value):
-        if isinstance(value, list):
-            self.many = value
+        if self.private:
+            if isinstance(value, list):
+                self.many = value
+            else:
+                self.one = value
         else:
-            self.one = value
+            self.query = value
 
 
 class Clean(ApiURL):
@@ -113,6 +129,16 @@ class Clean(ApiURL):
         self.email = EMail(**kwargs)
         self.date = Date(**kwargs)
         self.auto = Auto(**kwargs)
+
+
+class Suggestions(ApiURL):
+    url_postfix = "/suggest"
+
+    def __init__(self, *args, **kwargs):
+        super(Suggestions, self).__init__(*args, **kwargs)
+        kwargs['url'] = self.url
+        kwargs['private'] = False
+        self.address = Address(**kwargs)
 
 
 class Address(ApiURL):
@@ -150,8 +176,16 @@ class Auto(ApiURL):
     limit = AUTO_LIMIT
 
 
+class Party(ApiURL):
+    url_postfix = '/party'
+    limit = SUGGESTIONS_LIMIT
+
+
+
+
 class DaDataClient(object):
     url = 'https://dadata.ru/api/v2'
+    suggestions_url = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs'
     key = ''
     secret = ''
     data = []
@@ -166,16 +200,35 @@ class DaDataClient(object):
             client = self,
         )
 
+        self.suggestions = Suggestions(
+            url = self.suggestions_url,
+            client = self,
+        )
+
         self.session = requests.Session()
 
     def __getattr__(self, name):
         if name in CLEAN_NAMES:
             return getattr(self.clean, name)
+        tokens = name.split('_')
+
+        if len(tokens) == 2:
+            point, method = tokens
+            if point == 'suggest':
+                return getattr(self.suggestions, method)
+
         return super(DaDataClient, self).__getattr__(name)
 
     def __setattr__(self, name, value):
         if name in CLEAN_NAMES:
             return self.clean.__dict__[name].update(value)
+
+        tokens = name.split('_')
+        if len(tokens) == 2:
+            point, method = tokens
+            if point == 'suggest':
+                return self.suggestions.__dict__[method].update(value)
+
         return super(DaDataClient, self).__setattr__(name, value)
 
     def request(self, api_method=None):
@@ -205,4 +258,5 @@ class DaDataClient(object):
         self.result = api_method.process_result(self)
         self.response = response
         return SUCCESS
+
 
