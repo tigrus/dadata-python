@@ -79,6 +79,7 @@ class Result(object):
 class ApiURL(ManyOneMixin):
     limit = 1
     url = ''
+    private = True
 
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
@@ -177,7 +178,7 @@ class DaDataClient(object):
             return self.clean.__dict__[name].update(value)
         return super(DaDataClient, self).__setattr__(name, value)
 
-    def request(self, api_method=None, secret=True):
+    def request(self, api_method=None):
         # TODO: Rethink..
         if not self.key:
             return Errors.CLIENT_NO_KEY
@@ -190,7 +191,7 @@ class DaDataClient(object):
             'Authorization': 'Token %s' % self.key,
         }
 
-        if secret:
+        if api_method.private:
             headers['X-Secret'] = self.secret
 
         response = self.session.post(api_method.url,
