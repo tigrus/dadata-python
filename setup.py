@@ -10,7 +10,7 @@ setup(
     author = "Nikolay Fominykh",
     author_email = "nikolayfn@gmail.com",
     description = ("DaData Python Client"),
-    license = "BSD",
+    license = "MIT",
     keywords = "dadata api-client",
     # url = "http://packages.python.org/an_example_pypi_project",
     packages=['dadata'],
