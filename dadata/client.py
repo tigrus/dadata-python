@@ -139,6 +139,10 @@ class Suggestions(ApiURL):
         kwargs['url'] = self.url
         kwargs['private'] = False
         self.address = Address(**kwargs)
+        self.fio = FIO(**kwargs)
+        self.email = EMail(**kwargs)
+        self.organization = Party(**kwargs)
+        self.bank = Bank(**kwargs)
 
 
 class Address(ApiURL):
@@ -181,6 +185,9 @@ class Party(ApiURL):
     limit = SUGGESTIONS_LIMIT
 
 
+class Bank(ApiURL):
+    url_postfix = '/bank'
+    limit = SUGGESTIONS_LIMIT
 
 
 class DaDataClient(object):
