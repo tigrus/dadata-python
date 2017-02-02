@@ -16,7 +16,6 @@ PHONE_LIMIT = 3
 ADDRESS_LIMIT = 3
 FIO_LIMIT = 1
 
-
 """
 Constants & Errors
 """
@@ -132,7 +131,7 @@ class DaDataClient(object):
         self.clean.address.update(value)
 
 
-    def request(self, api_method=None):
+    def request(self, api_method=None, secret=True):
         # TODO: Rethink..
         if not self.key:
             return Errors.CLIENT_NO_KEY
@@ -141,12 +140,16 @@ class DaDataClient(object):
         if not self.data:
             return Errors.CLIENT_NO_DATA
 
+        headers={
+            'Authorization': 'Token %s' % self.key,
+        }
+
+        if secret:
+            headers['X-Secret'] = self.secret
+
         response = self.session.post(api_method.url,
                                      data=json.dumps(self.data),
-                                     headers={
-                                         'Authorization': 'Token %s' % self.key,
-                                         'X-Secret': '%s' % self.secret,
-                                     })
+                                     headers=headers)
 
         if not response.status_code == SUCCESS:
             return response.status_code
