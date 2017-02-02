@@ -16,6 +16,15 @@ PHONE_LIMIT = 3
 ADDRESS_LIMIT = 3
 FIO_LIMIT = 1
 PASSPORT_LIMIT = 1
+DATE_LIMIT = 1
+AUTO_LIMIT = 1
+
+
+"""
+Методы Стандартизации
+"""
+CLEAN_NAMES = ['address', 'phone', 'passport', 'fio', 'email', 'auto', 'date']
+
 
 """
 Constants & Errors
@@ -100,6 +109,9 @@ class Clean(ApiURL):
         self.phone = Phone(**kwargs)
         self.passport = Passport(**kwargs)
         self.fio = FIO(**kwargs)
+        self.email = EMail(**kwargs)
+        self.date = Date(**kwargs)
+        self.auto = Auto(**kwargs)
 
 
 class Address(ApiURL):
@@ -127,6 +139,16 @@ class EMail(ApiURL):
     limit = EMAIL_LIMIT
 
 
+class Date(ApiURL):
+    url_postfix = '/birthdate'
+    limit = DATE_LIMIT
+
+
+class Auto(ApiURL):
+    url_postfix = '/vehicle'
+    limit = AUTO_LIMIT
+
+
 class DaDataClient(object):
     url = 'https://dadata.ru/api/v2'
     key = ''
@@ -145,15 +167,15 @@ class DaDataClient(object):
 
         self.session = requests.Session()
 
+    def __getattr__(self, name):
+        if name in CLEAN_NAMES:
+            return getattr(self.clean, name)
+        return super(DaDataClient, self).__getattr__(name)
 
-    @property
-    def address(self):
-        return self.clean.address
-
-    @address.setter
-    def address(self, value):
-        self.clean.address.update(value)
-
+    def __setattr__(self, name, value):
+        if name in CLEAN_NAMES:
+            return self.clean.__dict__[name].update(value)
+        return super(DaDataClient, self).__setattr__(name, value)
 
     def request(self, api_method=None, secret=True):
         # TODO: Rethink..
