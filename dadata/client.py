@@ -116,6 +116,15 @@ class ApiURL(ManyOneMixin, QueryMixin):
             self.query = value
 
 
+class SuggestionApiURL(ApiURL):
+    def process_result(self, client):
+        result = Result(**client._result)
+        return result
+
+
+"""
+Clean API
+"""
 class Clean(ApiURL):
     url_postfix = '/clean'
 
@@ -131,20 +140,10 @@ class Clean(ApiURL):
         self.auto = Auto(**kwargs)
 
 
-class Suggestions(ApiURL):
-    url_postfix = "/suggest"
 
-    def __init__(self, *args, **kwargs):
-        super(Suggestions, self).__init__(*args, **kwargs)
-        kwargs['url'] = self.url
-        kwargs['private'] = False
-        self.address = Address(**kwargs)
-        self.fio = FIO(**kwargs)
-        self.email = EMail(**kwargs)
-        self.organization = Party(**kwargs)
-        self.bank = Bank(**kwargs)
-
-
+"""
+Clean Entities
+"""
 class Address(ApiURL):
     url_postfix = '/address'
     limit = ADDRESS_LIMIT
@@ -180,16 +179,54 @@ class Auto(ApiURL):
     limit = AUTO_LIMIT
 
 
-class Party(ApiURL):
+"""
+Suggestion API
+"""
+class Suggestions(ApiURL):
+    url_postfix = "/suggest"
+
+    def __init__(self, *args, **kwargs):
+        super(Suggestions, self).__init__(*args, **kwargs)
+        kwargs['url'] = self.url
+        kwargs['private'] = False
+        self.address = S_Address(**kwargs)
+        self.fio = S_FIO(**kwargs)
+        self.email = S_EMail(**kwargs)
+        self.organization = S_Party(**kwargs)
+        self.bank = S_Bank(**kwargs)
+
+
+"""
+Suggestion Entities
+"""
+class S_Address(SuggestionApiURL):
+    url_postfix = '/address'
+    limit = ADDRESS_LIMIT
+
+
+class S_Party(SuggestionApiURL):
     url_postfix = '/party'
     limit = SUGGESTIONS_LIMIT
 
 
-class Bank(ApiURL):
+class S_Bank(SuggestionApiURL):
     url_postfix = '/bank'
     limit = SUGGESTIONS_LIMIT
 
 
+class S_FIO(SuggestionApiURL):
+    url_postfix = '/name'
+    limit = FIO_LIMIT
+
+
+class S_EMail(SuggestionApiURL):
+    url_postfix = '/email'
+    limit = EMAIL_LIMIT
+
+
+"""
+Client..
+"""
 class DaDataClient(object):
     url = 'https://dadata.ru/api/v2'
     suggestions_url = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs'
