@@ -24,4 +24,3 @@ class DjangoTest(CommonTestCase):
     def test_django_init(self):
         client = dadata.plugins.django.DjangoDaDataClient()
         self.assertEqual(client.key, "key")
-        pass
