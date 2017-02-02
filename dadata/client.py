@@ -122,6 +122,11 @@ class FIO(ApiURL):
     limit = FIO_LIMIT
 
 
+class EMail(ApiURL):
+    url_postfix = '/email'
+    limit = EMAIL_LIMIT
+
+
 class DaDataClient(object):
     url = 'https://dadata.ru/api/v2'
     key = ''
