@@ -50,3 +50,14 @@ In project:
 >>> client.address = "мск сухонска 11/-89"
 ...
 ```
+
+## Suggestions Usage
+
+
+```
+>>> client.suggest_address = "194292, Санкт-Петербург г, 1-й Верхний пер, дом № 12, литера Б"
+>>> client.suggestions.address.request()
+>>> # Now we have list of suggestions in client.result
+>>> client.result.suggestions[0].get('data').get('kladr_id')
+'7800000000015870028'
+```
