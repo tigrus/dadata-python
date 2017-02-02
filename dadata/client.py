@@ -109,6 +109,9 @@ class Phone(ApiURL):
     limit = PHONE_LIMIT
 
 
+class Passport(ApiURL):
+    url_postfix = '/passport'
+    limit = PASSPORT_LIMIT
 
 
 class DaDataClient(object):
