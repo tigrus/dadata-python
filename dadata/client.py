@@ -96,11 +96,19 @@ class Clean(ApiURL):
         super(Clean, self).__init__(*args, **kwargs)
         kwargs['url'] = self.url
         self.address = Address(**kwargs)
+        self.phone = Phone(**kwargs)
 
 
 class Address(ApiURL):
     url_postfix = '/address'
     limit = ADDRESS_LIMIT
+
+
+class Phone(ApiURL):
+    url_postfix = '/phone'
+    limit = PHONE_LIMIT
+
+
 
 
 class DaDataClient(object):
