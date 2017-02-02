@@ -98,6 +98,8 @@ class Clean(ApiURL):
         kwargs['url'] = self.url
         self.address = Address(**kwargs)
         self.phone = Phone(**kwargs)
+        self.passport = Passport(**kwargs)
+        self.fio = FIO(**kwargs)
 
 
 class Address(ApiURL):
@@ -113,6 +115,11 @@ class Phone(ApiURL):
 class Passport(ApiURL):
     url_postfix = '/passport'
     limit = PASSPORT_LIMIT
+
+
+class FIO(ApiURL):
+    url_postfix = '/name'
+    limit = FIO_LIMIT
 
 
 class DaDataClient(object):
