@@ -229,7 +229,7 @@ Client..
 """
 class DaDataClient(object):
     url = 'https://dadata.ru/api/v2'
-    suggestions_url = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs'
+    suggestions_url = 'https://dadata.ru/api/v2'
     key = ''
     secret = ''
     data = []
