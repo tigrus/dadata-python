@@ -279,8 +279,8 @@ class DaDataClient(object):
         # TODO: Rethink..
         if not self.key:
             return Errors.CLIENT_NO_KEY
-        if not self.secret:
-            return Errors.CLIENT_NO_SECRET
+        # if not self.secret:
+        #     return Errors.CLIENT_NO_SECRET
         if not self.data:
             return Errors.CLIENT_NO_DATA
 
