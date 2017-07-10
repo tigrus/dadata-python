@@ -4,16 +4,21 @@ from setuptools import setup
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+exec(open('dadata/version.py').read())
+
 setup(
-    name = "DaData Client",
-    version = "0.0.1",
+    name = "dadata-client",
+    version = __version__,
     author = "Nikolay Fominykh",
     author_email = "nikolayfn@gmail.com",
     description = ("DaData Python Client"),
     license = "MIT",
     keywords = "dadata api-client",
     # url = "http://packages.python.org/an_example_pypi_project",
-    packages=['dadata'],
+    packages=[
+        'dadata',
+        'dadata.plugins'
+    ],
     install_requires=[
         'requests',
         # 'nosetests',
