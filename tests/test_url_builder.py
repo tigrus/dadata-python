@@ -16,9 +16,9 @@ class UrlBuildTest(CommonTestCase):
         result = self.client.address.request()
         self.assertEqual(result, Errors.CLIENT_NO_KEY)
 
-    def test_request_no_secret(self):
-        result = self.client_with_key.address.request()
-        self.assertEqual(result, Errors.CLIENT_NO_SECRET)
+    #def test_request_no_secret(self):
+        #result = self.client_with_key.address.request()
+        #self.assertEqual(result, Errors.CLIENT_NO_SECRET)
 
     def test_request_no_data(self):
         result = self.client_with_key_secret.address.request()
