@@ -229,7 +229,7 @@ Client..
 """
 class DaDataClient(object):
     url = 'https://dadata.ru/api/v2'
-    suggestions_url = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs'
+    suggestions_url = 'https://dadata.ru/api/v2'
     key = ''
     secret = ''
     data = []
@@ -279,8 +279,8 @@ class DaDataClient(object):
         # TODO: Rethink..
         if not self.key:
             return Errors.CLIENT_NO_KEY
-        if not self.secret:
-            return Errors.CLIENT_NO_SECRET
+        # if not self.secret:
+        #     return Errors.CLIENT_NO_SECRET
         if not self.data:
             return Errors.CLIENT_NO_DATA
 
