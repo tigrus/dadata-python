@@ -1,6 +1,8 @@
 # coding : utf-8
-import sys
+from __future__ import absolute_import
+
 from dadata import DaDataClient
+
 
 def get_settings():
     from django.conf import settings
@@ -14,4 +16,3 @@ class DjangoDaDataClient(DaDataClient):
             key=settings.DADATA_KEY,
             secret=settings.DADATA_SECRET,
         )
-
