@@ -7,4 +7,5 @@ src/*
 *.pyc
 .cache
 *.egg
+.idea
 
